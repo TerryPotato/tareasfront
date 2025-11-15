@@ -21,6 +21,30 @@ export const crearTarea = createAsyncThunk('tareas/crear', async(tareaData, thun
     }
 })
 
+//Eliminar una tarea
+export const deleteTarea = createAsyncThunk('tareas/delete', async(id, thunkApi) => {
+    try {
+        const token = thunkApi.getState().auth.user.token
+        return await tareaService.deleteTarea(id, token)
+    } catch (error) {
+        const message = (error.response && error.response.data && error.response.data.message) ||
+        error.message || error.toString()
+        return thunkApi.rejectWithValue(message)
+    }
+})
+
+//Obtener la lista de tareas
+export const gteTareas = createAsyncThunk('tareas/get', async(__, thunkApi) => {
+    try {
+        const token = thunkApi.getState().auth.user.token
+        return await tareaService.getTareas(token)
+    } catch (error) {
+        const message = (error.response && error.response.data && error.response.data.message) ||
+        error.message || error.toString()
+        return thunkApi.rejectWithValue(message)
+    }
+})
+
 export const tareaSlice = createSlice({
     name: 'tarea',
     initialState,
