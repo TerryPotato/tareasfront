@@ -34,7 +34,7 @@ export const deleteTarea = createAsyncThunk('tareas/delete', async(id, thunkApi)
 })
 
 //Obtener la lista de tareas
-export const gteTareas = createAsyncThunk('tareas/get', async(__, thunkApi) => {
+export const getTareas = createAsyncThunk('tareas/get', async(__, thunkApi) => {
     try {
         const token = thunkApi.getState().auth.user.token
         return await tareaService.getTareas(token)
@@ -53,6 +53,7 @@ export const tareaSlice = createSlice({
     },
     extraReducers: (builder) => {
         builder
+        //crearTareas
         .addCase(crearTarea.pending, (state) => {
             state.isLoading = true
         })
@@ -62,6 +63,35 @@ export const tareaSlice = createSlice({
             state.tareas.push(action.payload)
         })
         .addCase(crearTarea.rejected, (state,action) => {
+            state.isLoading = false
+            state.isError = true
+            state.message = action.payload
+        })
+        //getTareas
+        .addCase(getTareas.pending, (state) => {
+            state.isLoading = true
+        })
+        .addCase(getTareas.fulfilled, (state, action) => {
+            state.isLoading = false
+            state.isSuccess = true
+            state.tareas = action.payload
+
+        })
+        .addCase(getTareas.rejected, (state,action) => {
+            state.isLoading = false
+            state.isError = true
+            state.message = action.payload
+        })
+        //deleteTareas
+        .addCase(deleteTarea.pending, (state) => {
+            state.isLoading = true
+        })
+        .addCase(deleteTarea.fulfilled, (state, action) => {
+            state.isLoading = false
+            state.isSuccess = true
+            state.tareas = state.tareas.filter((tarea) => tarea._id !== action.payload.id)
+        })
+        .addCase(deleteTarea.rejected, (state,action) => {
             state.isLoading = false
             state.isError = true
             state.message = action.payload
