@@ -1,9 +1,25 @@
 import React from 'react'
+import TareaForm from '../components/TareaForm'
+import { useNavigate } from 'react-router-dom'
+import { useSelector, useDispatch } from 'react-redux'
+import Spinner from '../components/Spinner'
 
-const dashboard = () => {
+const Dashboard = () => {
+
+  const navigate = useNavigate()
+  const dispatch = useDispatch()
+  const {user} = useSelector((state) => state.auth)
+
   return (
-    <div>Dashboard</div>
+    <>
+    <section className="heading">
+      <h3>Bienvenido {user && user.nombre}</h3>
+      <p>DASHBOARD DE TAREAS</p>
+    </section>
+    <TareaForm />
+    </>
+    
   )
 }
 
-export default dashboard
+export default Dashboard
